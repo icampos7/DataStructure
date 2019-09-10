@@ -1,0 +1,37 @@
+import hashlib
+#Author Isaac Campos 
+#Data Structures 
+#Proffer Diego Aguirre
+def Create_Pass(start,end,salt,HashUser):#userpasswordSalt
+    if len(start) == end:
+        return start # checks if the length of the string is equal to 7
+    for i in range(0,10):
+        PassWord = Create_Pass(start + str(i),end,salt,HashUser)#save each individual passWord Generated
+        Combine = salt + PassWord# combines the PassWord Generate with the usersPassword
+        HashPass = hash_with_sha256(Combine)#ones combine it call the method hash256 to create the long passWord
+        TrueOrFalse = CheckPass(HashPass,HashUser)#ones the password is hash it send the combine to check if any of the possible combination is true or false
+    print(TrueOrFalse)    #print the true or false for all possible combination
+    return Create_Pass(start + str(i),end,salt,HashPass)
+def CheckPass(hashPass,hashUser):
+    if hashPass == hashUser:
+        return True#checks if its the same or not
+    return False
+def hash_with_sha256(str):
+    hash_object = hashlib.sha256(str.encode('utf-8'))#creates the huge password
+    hex_dig = hash_object.hexdigest()
+    return hex_dig
+def ReadTextFile():
+    #reads the text file into columns 
+   for line in open("password_file.txt","r"):
+       columns = line.split(',')
+       UserPass = columns[1]
+       HashPassWord = columns[2]
+       Create_Pass(start,end,UserPass,HashPassWord)
+#def main():
+    #hex_dig = hash_with_sha256('This is how you hash a string with sha256')
+    #hex_dig =  hash_with_sha256(GeneratePass);
+    #return hex_dig
+    #print(hex_dig)    
+start = "" # the start of the list
+end = 3 # were it finish start with a default value as another test case
+ReadTextFile()
