@@ -1,0 +1,96 @@
+#Sources https://www.geeksforgeeks.org/python-program-for-bubble-sort/
+'''
+Author: Isaac Campos
+Class: Cs 2302
+Date: 9/25/19
+Instructor:Proffesor Diego 
+TA: Gerardo Barraza
+
+'''
+class Node(object):
+   item = -1
+   next = None
+   def __init__(self,item,next = None):
+       self.item = item
+       self.next = next
+   def getData(self):
+       return self.item
+   def getNext(self):
+       return self.next
+   def setNext(self,newItem):
+       self.next = newItem
+class LinkL:
+    def __init__(self,head = None):
+        self.head = head
+    def getCount(self):
+        counter = 0
+        temp = self.head
+        while(temp.next):
+            counter += 1
+            temp = temp.next
+        return counter  
+    def insertNode(self,item):
+       newNode = Node(item)
+       if self.head is None:
+           self.head = newNode
+           return
+       temp = self.head
+       while(temp.next):
+           temp = temp.next
+       temp.next = newNode    
+       return self.head   
+    def CompareBubbleNode(self):
+       currNode = self.head
+       if currNode is None:
+           return
+       else:
+           while currNode.getNext() is not None:
+               if currNode.getData() > currNode.next.getData():
+                    Swap(currNode)
+    def Swap(currN):                
+       itmNode = currN.getData()
+       currN.item = currN.next.item
+       currN.next.item = itmNode  
+    def MergeSort(self):
+       temp = self.head
+       if head is None:
+           return
+       middle = getMiddle(head)
+       nextmiddle = middle.next
+       left = MergeSort(head)
+       right = MergeSort(nextmiddle)
+       sortList = MergeSort(left,right)
+       return sortList
+    def getMiddle(head):
+        if head is None:
+            return head
+        temp = self.head
+        temp2 = self.head
+        while(temp2.next):
+            temp = temp.next
+            temp2 = temp.next.next
+        return temp
+    def printNode(self):
+       curr = self.head
+       while curr:
+           print(curr.getData())
+           curr = curr.next    
+call = LinkL()
+file = open("vivendi.txt")
+line = file.readline()
+while line:
+    line = file.readline()
+   # print("inside the loop")
+    #List = 
+    List = call.insertNode(line)
+    call.CompareBubbleSort(List)
+    #call.CompareBubbleNode(List)
+file.close()
+file2 = open("activision.txt")
+line2 = file2.readline();
+while line2:
+    line2 = file2.readline()
+    call.insertNode(line2)
+
+file2.close()
+call.printNode()
