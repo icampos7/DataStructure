@@ -1,0 +1,146 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Oct 11 14:05:12 2019
+'''
+Author: Isaac Campos
+Class: Cs 2302
+Date: 10/21/19
+Instructor:Proffesor Diego 
+TA: Gerardo Barraza
+
+'''
+class Node(object):
+    item = ""
+  #  Height = 0
+     
+    def __init__(self,item):
+       self.item = item
+       self.parent = None
+       self.right = None
+       self.left = None
+class AVLTree:
+    height = 0
+    root = None
+    def __init__(self,root = None):
+         self.root = root
+#*****************************************************************************************************
+    def getHeight(self,root):
+        c = AVLTree()
+        valueH = c.get_TreeHeight(self,root)
+        return valueH
+#***************************************************************************************************** 
+    def get_TreeHeight(self,root):     
+        if root is None:
+            return 0
+        Lh = self.get_TreeHeight(root.left)
+        Rh = self.get_TreeHeight(root.right)
+        if Lh > Rh :
+            return Lh + 1
+        else:
+            return Rh + 1
+#*****************************************************************************************************
+    def AVLtreeUpdateHeight(self,nodeData):
+        leftH = -1
+        if nodeData is not None:
+            leftH = nodeData.left.height
+        rightH = -1
+        if nodeData.right is not None:
+            rightH = nodeData.right.height
+        nodeData.height = max(leftH,rightH) + 1    
+#*****************************************************************************************************        
+    def AVLTreeRebalance(self,nodeData):
+        c = AVLTree()
+        c.AVLtreeUpdateHeight(nodeData)
+        if c.AVLtreeUpdateHeight(nodeData) == -2:
+            c.AVLtreeRotateR(self,nodeData.right)
+            return c.AVLtreeRotateL(self,nodeData)   
+#***************************************************************************************************** 
+    def AVLTreeSetChild(self,parent,WhichChild,child):
+        if WhichChild != "left" and WhichChild != "right":
+            return False
+        if WhichChild == "left":
+            parent.left = child
+        else:
+            parent.right = child
+        if child != None:
+            child.parent = parent
+#*****************************************************************************************************            
+    def AVLTreeReplaceChild(parent,currChild,newChild):
+        c = AVLTree()
+        if parent.left is currChild:
+            return c.AVLTreeSetChild(parent,"left", newChild)
+        elif(parent.right is currChild):
+            return c.AVLTreeSetChild(parent,"right", newChild)
+        return False
+#*****************************************************************************************************    
+    def AVLTreeRotationRight(self,nodeD):
+      newRoot  = nodeD.left
+      temp = newRoot.right
+      #rotation************
+      newRoot.right = nodeD
+      nodeD.left = temp
+      #**********************
+      nodeD.height = 1 + max(self.getHeight(nodeD.left),self.getHeight(nodeD.right))
+      newRoot.height = 1 + max(self.getHeight(newRoot.left),self.getHeight(newRoot.right))
+      return newRoot
+#***************************************************************************************************** 
+    def AVLRotateLeft(self,node):
+      newRoot  = node.right
+      temp = newRoot.left
+      #********************
+      newRoot.left = node
+      node.right = temp
+      #********************
+      node.height = 1 + max(self.getHeight(node.left),self.getHeight(node.right))
+      newRoot.height = 1 + max(self.getHeight(newRoot.left),self.getHeight(newRoot.right))
+      return newRoot
+#*****************************************************************************************************    
+    def insertItem(self,data):
+        newItem = Node(data)
+        if self.root is None:
+            self.root = newItem
+            self.root.left = None
+            self.root.right = None
+            self.height = self.height + 1
+            return
+        #curr = root
+        self.height = self.height + 1
+        currNode = self.root
+        while currNode is not None:
+            if newItem.item < currNode.item:
+                if currNode.left is None:
+                    currNode.left = newItem
+                    newItem.parent = currNode
+                    currNode = None
+                else:
+                    currNode = currNode.left
+            else:
+                if currNode.right is None:
+                    currNode.right = newItem
+                    newItem.parent - currNode
+                    currNode = None
+                else:
+                    currNode = currNode.right
+        newItem = newItem.parent
+        while newItem is not None: 
+            self.AVLTreeRebalance(newItem)
+            newItem = newItem.parent
+#*****************************************************************************************************            
+    def printTree(self,node):
+        if node is None:
+            return 
+        self.printTree(node.left)
+        print(node.item)
+        self.printTree(node.right)
+#*****************************************************************************************************
+class RedAndBlack:
+    
+        
+file = open("words.txt")
+#word = input("input word:")
+call = AVLTree()
+line = file.readline()
+e = None
+while line:
+    line = file.readline()
+file.close()       
