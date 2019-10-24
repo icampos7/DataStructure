@@ -95,16 +95,111 @@ class AVLTree:
       newRoot.height = 1 + max(self.getHeight(newRoot.left),self.getHeight(newRoot.right))
       return newRoot
 #*****************************************************************************************************    
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Oct 11 14:05:12 2019
+
+@author: Isaac
+  """
+class Node(object):
+    item = ""
+  #  Height = 0
+    height = 0
+    def __init__(self,item):
+       self.item = item
+       self.parent = None
+       self.right = None
+       self.left = None
+       self.color = ""
+class AVLTree:
+    count = 0
+    root = None
+    def __init__(self,root = None):
+         self.root = root
+#*****************************************************************************************************
+    @staticmethod    
+    def getHeight(root):
+       # c = AVLTree()
+        valueH = root.get_TreeHeight(root)
+        return valueH
+#***************************************************************************************************** 
+    @staticmethod    
+    def get_TreeHeight(root):     
+        if root is None:
+            return 0
+        Lh = root.get_TreeHeight(root.left)
+        Rh = root.get_TreeHeight(root.right)
+        if Lh > Rh :
+            return Lh + 1
+        else:
+            return Rh + 1
+#*****************************************************************************************************
+    @staticmethod        
+    def AVLtreeUpdateHeight(nodeData):
+        leftH = -1
+        if nodeData is not None:
+            leftH = nodeData.height
+        rightH = -1
+        if nodeData.right is not None:
+            rightH = nodeData.right.height
+        nodeData.height = max(leftH,rightH) + 1    
+#*****************************************************************************************************              
+    def AVLTreeRebalance(self,nodeData):
+        self.AVLtreeUpdateHeight(nodeData)
+        if self.AVLtreeUpdateHeight(nodeData) == -2:
+            self.AVLtreeRotateR(nodeData.right)
+            return self.AVLtreeRotateL(nodeData)   
+#***************************************************************************************************** 
+    def AVLTreeSetChild(self,parent,WhichChild,child):
+        if WhichChild != "left" and WhichChild != "right":
+            return False
+        if WhichChild == "left":
+            parent.left = child
+        else:
+            parent.right = child
+        if child != None:
+            child.parent = parent
+#*****************************************************************************************************            
+    def AVLTreeReplaceChild(parent,currChild,newChild):
+        c = AVLTree()
+        if parent.left is currChild:
+            return c.AVLTreeSetChild(parent,"left", newChild)
+        elif(parent.right is currChild):
+            return c.AVLTreeSetChild(parent,"right", newChild)
+        return False
+#*****************************************************************************************************    
+    def AVLTreeRotationRight(self,nodeD):
+      newRoot  = nodeD.left
+      temp = newRoot.right
+      #rotation************
+      newRoot.right = nodeD
+      nodeD.left = temp
+      #**********************
+      nodeD.height = 1 + max(self.getHeight(nodeD.left),self.getHeight(nodeD.right))
+      newRoot.height = 1 + max(self.getHeight(newRoot.left),self.getHeight(newRoot.right))
+      return newRoot
+#***************************************************************************************************** 
+    def AVLRotateLeft(self,node):
+      newRoot  = node.right
+      temp = newRoot.left
+      #********************
+      newRoot.left = node
+      node.right = temp
+      #********************
+      node.height = 1 + max(self.getHeight(node.left),self.getHeight(node.right))
+      newRoot.height = 1 + max(self.getHeight(newRoot.left),self.getHeight(newRoot.right))
+      return newRoot
+#*****************************************************************************************************    
     def insertItem(self,data):
         newItem = Node(data)
         if self.root is None:
             self.root = newItem
             self.root.left = None
             self.root.right = None
-            self.height = self.height + 1
+            newItem.height = newItem.height + 1
             return
         #curr = root
-        self.height = self.height + 1
+        newItem.height = newItem.height + 1
         currNode = self.root
         while currNode is not None:
             if newItem.item < currNode.item:
@@ -117,7 +212,7 @@ class AVLTree:
             else:
                 if currNode.right is None:
                     currNode.right = newItem
-                    newItem.parent - currNode
+                    newItem.parent = currNode
                     currNode = None
                 else:
                     currNode = currNode.right
@@ -125,6 +220,7 @@ class AVLTree:
         while newItem is not None: 
             self.AVLTreeRebalance(newItem)
             newItem = newItem.parent
+      #  return self.root    
 #*****************************************************************************************************            
     def printTree(self,node):
         if node is None:
@@ -132,15 +228,211 @@ class AVLTree:
         self.printTree(node.left)
         print(node.item)
         self.printTree(node.right)
+class RedBlacktree:
+    root = None
+    #count = 0
+    height = 0
+    def __init__(self,root = None):
+         self.root = root
+         self.color = "black"
+    @staticmethod        
+    def RedBlacktreetreeUpdateHeight(nodeData):
+        leftH = -1
+        if nodeData is not None:
+            leftH = nodeData.height
+        rightH = -1
+        if nodeData.right is not None:
+            rightH = nodeData.right.height
+        nodeData.height = max(leftH,rightH) + 1        
 #*****************************************************************************************************
-class RedAndBlack:
-    
+    def RedBlackTreeSetChild(self,parent,WhichChild,child):
+        if WhichChild != "left" and WhichChild != "right":
+            return False
+        if WhichChild == "left":
+            parent.left = child
+        else:
+            parent.right = child
+        if child != None:
+            child.parent = parent    
+#*****************************************************************************************************            
+    def RedBlackTreeReplaceChild(parent,currChild,newChild):
+        c = AVLTree()
+        if parent.left is currChild:
+            return c.AVLTreeSetChild(parent,"left", newChild)
+        elif(parent.right is currChild):
+            return c.AVLTreeSetChild(parent,"right", newChild)
+        return False    
+#*****************************************************************************************************
+    def RedBlackTreeRotateLeft(self,nodeData):
+        rightLChild = nodeData.right.left
+        if nodeData.parent is None:
+            self.RedBlackTreeReplaceChild(nodeData.parent,nodeData,nodeData.right)
+        else:
+            self.root = nodeData
+            self.root.parent = None 
+        self.RedBlackTreeSetChild(nodeData.right,"left",nodeData)
+        self.RedBlackTreeSetChild(nodeData,"right",rightLChild)        
+    def RedBlackTreeRotateRight(self,nodeData):
+        leftRChild = nodeData.left.right
+        if nodeData.parent is not None:
+            self.RedBlackTreeReplaceChild(nodeData.parent,nodeData,nodeData.right)
+        else:
+            self.root = nodeData.right
+            self.root.parent = None
+        self.RedBlackTreeSetChild(nodeData.left,"right",nodeData)
+        self.RedBlackTreeSetChild(nodeData,"left",leftRChild)
         
-file = open("words.txt")
-#word = input("input word:")
-call = AVLTree()
-line = file.readline()
-e = None
-while line:
+#*****************************************************************************************************    
+    @staticmethod
+    def RBgetGrandParent(node):
+        if node.parent is None:
+            return None
+        return node.parent.parent
+    @staticmethod
+    def RBgetUncle(node):
+        grandparent = None
+        if node.parent is not None:
+            grandparent = node.parent.parent
+        if grandparent is None:
+            return None
+        if grandparent.left is node.parent:
+            return grandparent.right
+        else:
+            return grandparent.left
+#*****************************************************************************************************
+    def BalanceRedBlackTree(self,nodeData):
+        if nodeData.parent is None:
+            nodeData.color = "black"
+            return
+        if nodeData.parent.color == "black":
+            return
+        parent = nodeData.parent
+        grandparent = self.RBgetGrandParent(nodeData)
+        uncle = self.RBgetUncle(nodeData)
+        if uncle is not None and uncle.colot == "red":
+            parent.color = uncle.color = "black"
+            self.BalanceRedBlackTree(grandparent)
+            return 
+        if nodeData is parent.right and parent is grandparent.left:
+            self.RedBlackTreeRotateRight(parent)
+            nodeData = parent
+            parent = nodeData.parent
+        elif nodeData is parent.left and parent is grandparent.right:
+            self.RedBlackTreeRotateRight(parent)
+            nodeData = parent
+            parent = nodeData
+        parent.color = "black"    
+        grandparent.color = "red"
+        if nodeData is parent.left:
+            self.RedBlackTreeRotateRight(grandparent)
+        else:
+            self.RedBlackTreeRotateLeft(grandparent)
+#*****************************************************************************************************    
+    '''
+    insert the item in the corresponding place
+    '''
+    def insertItem(self,data):
+        newItem = Node(data)
+        if self.root is None:
+            self.root = newItem
+            self.root.color = "black" #default color
+            newItem.height = newItem.height + 1
+            return
+        #curr = root
+        newItem.height = newItem.height + 1
+        currNode = self.root
+        while currNode is not None:
+            if newItem.item < currNode.item:
+                if currNode.left is None:
+                    currNode.left = newItem
+                    newItem.parent = currNode
+                    currNode = None
+                else:
+                    currNode = currNode.left
+            else:
+                if currNode.right is None:
+                    currNode.right = newItem
+                    newItem.parent = currNode
+                    currNode = None
+                else:
+                    currNode = currNode.right
+        newItem.color = "red"
+        self.RedBlackB
+        while newItem is not None: 
+            self.AVLTreeRebalance(newItem)
+            newItem = newItem.parent
+
+#*****************************************************************************************************
+            
+def BSTSearch(word):
+  c = AVLTree()
+  if c.root is None or c.root == word: # if the word its on root return true
+      return True
+  if c.root.item < word:
+      return c.BSTSearch(c.root.right,word)
+  return False# if not false
+            
+#*****************************************************************************************************        
+  #print all possible combinations 
+def print_anagrams(word, prefix=""):
+    #BSTSearch
+    #c = AVLTree()
+    #print("before if")
+    counter = 0
+    if len(word) <= 1:
+        str = prefix + word
+        if BSTSearch(str):
+            counter += 1
+            print(prefix + word)
+            
+    else:
+        for i in range(len(word)):
+            cur = word[i: i + 1]
+            before = word[0: i] # letters before cur
+            after = word[i + 1:] # letters after cur 
+    
+            if cur not in before: # Check if permutations of cur have not been generated.
+                print_anagrams(before + after, prefix + cur)
+                
+#*****************************************************************************************************                  
+def AVLTreeMethod(UserInput,file,word):     
+    call = AVLTree()                  
     line = file.readline()
-file.close()       
+    while line:
+        line = file.readline()
+        #root = 
+        call.insertItem(line)
+      #  call.height = call.getHeight(root)
+    file.close()       
+    print_anagrams(word)
+'''
+AVLTreeMethod read the text file line by line and insert it to the corresponding 
+tree
+RedBlackTree reads the the text file and insert it each value in the tree 
+'''
+def RedBlackTreeMethod(UserInput,file,word):
+    call = RedBlacktree()
+    line = file.readline()
+    while line:
+        line = file.readline()
+        call.insertItem(line)
+    file.close()
+    print_anagrams(word)
+
+'''
+ask the user which tree they want to uses call the corresponding methods
+''' 
+def main():
+    file = open("words.txt")
+    print("please choose an option:")
+    print("A.AVLTree")
+    print("B.RBlackTree")
+    UserInput= input()
+    word = input("input a word you want to fine :")
+    if UserInput == "A" or UserInput == "a":
+        AVLTreeMethod(UserInput,file,word)
+        
+    elif UserInput == "B" or UserInput == "b":
+        RedBlackTreeMethod(UserInput,file,word)
+        
+main()
