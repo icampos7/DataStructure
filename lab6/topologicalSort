@@ -1,0 +1,33 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Dec  2 17:43:30 2019
+
+@author: Isaac
+"""
+'''
+import the default dictionary from collection
+'''
+from collections import defaultdict
+
+class TopologicalSort:
+    def __init__(self,ver):
+        self.graph = defaultdict(list)
+        self.vertices = ver#numbers of vertices 
+    def addEdge(self,u,ver):#Method that adds an edge to the graph 
+        self.graph[u].append(ver)
+    def topoSort_Util(self,ver,visited,stack):
+        #Mark the current node visited 
+        visited[ver] = True
+        for i in self.graph[ver]:
+            if visited[i] == False:
+                self.topoSort(i,visited,stack)
+        stack.insert(0,ver)
+    def topoSort(self):
+        visited = [False] * self.vertices
+        stack = []
+        for i in range(self.vertices):
+            if visited[i] == False:
+                self.topoSort_Util(i,visited,stack)
+        #return 0                
+        
+        
