@@ -1,0 +1,15 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Dec  8 16:08:41 2019
+
+@author: Isaac
+"""
+def distance(str1,str2,len1,len2):
+    if len1 == 0:
+        return str2
+    if len2 == 0:
+        return str1
+    if str1[len1-1] == str[len2-1]:
+        return distance(str1,str2,len1,len2)
+    return 1 + min(distance(str1,str2,len1,len2-1),distance(str1,str2,len1-1,len2),
+                   distance(str1,str2,len1-1,len2-1))
